@@ -22,7 +22,6 @@ module BibleRef
     def ranges
       return nil unless valid?
       @chapter = nil
-      fix_chapter_for_jude if book_id == 'JUD'
       [@details[:refs]].flatten.map do |ref|
         normalize_range(ref) || normalize_ref(ref)
       end
@@ -100,25 +99,6 @@ module BibleRef
       (1..2).map do
         { book: book_id, chapter: @chapter }.merge(ref)
       end
-    end
-
-    def fix_chapter_for_jude
-      (start, finish) = @details[:refs]
-      finish ||= start
-      @details[:refs] = [
-        {
-          range: {
-            from: {
-              chapter: 1,
-              verse: start[:chapter]
-            },
-            to: {
-              chapter: 1,
-              verse: finish[:chapter]
-            }
-          }
-        }
-      ]
     end
   end
 end
